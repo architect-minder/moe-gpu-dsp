@@ -1,6 +1,6 @@
 [package]
 name = "moe-gpu-dsp"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Sean Morin"]
 description = "MoE-routed GPU signal processing framework — batch cuFFT, kernel dispatch, zero-copy pipelines"
