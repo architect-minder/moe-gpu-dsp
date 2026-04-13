@@ -59,13 +59,97 @@ let mut masked = dsp.soft_mask(&h_filtered, &v_filtered, &complex_floats,
 let output = dsp.batch_ifft_c2r_ola(&mut masked, n_frames, audio_signal.len());
 ```
 
-## Requirements
+## Setup
 
-- NVIDIA GPU (tested on RTX 3070, sm_86)
-- CUDA toolkit installed (13.x)
-- cudarc 0.19
+### 1. Install CUDA toolkit
 
-Configure GPU architecture in `DspConfig::gpu_arch` (default: `"sm_86"`).
+**Linux / WSL:**
+```bash
+# Ubuntu/Debian
+sudo apt-get install -y cuda-toolkit-13-1
+
+# Verify
+nvcc --version
+```
+
+**Windows:** Download from [NVIDIA CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) and install.
+
+### 2. Set environment variables
+
+The build needs to find your CUDA installation:
+
+```bash
+export PATH=/usr/local/cuda/bin:$PATH
+export CUDA_PATH=/usr/local/cuda
+```
+
+If your CUDA toolkit version differs from your driver version (common on WSL), pin it:
+
+```bash
+# Check driver version: nvidia-smi
+# Set toolkit version to match driver (e.g. driver 13.1 = 13010)
+export CUDARC_CUDA_VERSION=13010
+```
+
+### 3. Add to your project
+
+```toml
+[dependencies]
+moe-gpu-dsp = { git = "https://github.com/architect-minder/moe-gpu-dsp", features = ["cuda"] }
+```
+
+### 4. Build
+
+```bash
+cargo build --features cuda
+```
+
+### 5. Run
+
+At runtime, the CUDA libraries must be on `LD_LIBRARY_PATH`:
+
+```bash
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+cargo run --features cuda
+```
+
+### Configure GPU architecture
+
+Default target is `sm_86` (RTX 3070/3080/3090). Change it in `DspConfig`:
+
+```rust
+let config = DspConfig {
+    gpu_arch: "sm_89",  // RTX 4090
+    ..Default::default()
+};
+```
+
+Common architectures:
+
+| GPU | Architecture |
+|-----|-------------|
+| RTX 2070/2080 | `sm_75` |
+| RTX 3070/3080/3090 | `sm_86` |
+| RTX 4070/4080/4090 | `sm_89` |
+| A100 | `sm_80` |
+| H100 | `sm_90` |
+
+### WSL-specific notes
+
+- CUDA toolkit goes in WSL. Do NOT install Linux GPU drivers in WSL (the Windows driver bridges automatically).
+- If you get `CUDA_ERROR_UNSUPPORTED_PTX_VERSION`, your toolkit version is newer than your driver. Install an older toolkit or update the Windows NVIDIA driver.
+- cuFFT libraries are in `/usr/local/cuda/lib64/`. Make sure `LD_LIBRARY_PATH` includes this at runtime.
+
+### Graceful fallback
+
+Without the `cuda` feature, `GpuDsp::new()` returns `None`. You can fall back to CPU:
+
+```rust
+let dsp = GpuDsp::new(DspConfig::default());
+if dsp.is_none() {
+    // CPU fallback
+}
+```
 
 ## Performance
 
