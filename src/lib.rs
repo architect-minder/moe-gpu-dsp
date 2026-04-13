@@ -29,27 +29,24 @@
 //! ```
 
 #[cfg(feature = "cuda")]
-mod pipeline;
-#[cfg(feature = "cuda")]
 mod kernels;
+#[cfg(feature = "cuda")]
+mod pipeline;
 
 #[cfg(feature = "cuda")]
-pub use pipeline::{GpuDsp, DspConfig};
+pub use pipeline::{DspConfig, GpuDsp};
 
 #[cfg(feature = "cuda")]
 pub use kernels::{
+    KERNEL_MAGNITUDE, KERNEL_MEDIAN_FILTER, KERNEL_OVERLAP_ADD, KERNEL_SOFT_MASK,
     KERNEL_WINDOW_FRAMES,
-    KERNEL_MAGNITUDE,
-    KERNEL_MEDIAN_FILTER,
-    KERNEL_SOFT_MASK,
-    KERNEL_OVERLAP_ADD,
 };
 
 // Re-export cudarc types callers need
 #[cfg(feature = "cuda")]
-pub use cudarc::driver::{CudaSlice, CudaFunction, LaunchConfig, PushKernelArg, CudaView};
-#[cfg(feature = "cuda")]
 pub use cudarc::cufft::sys as cufft_sys;
+#[cfg(feature = "cuda")]
+pub use cudarc::driver::{CudaFunction, CudaSlice, CudaView, LaunchConfig, PushKernelArg};
 
 /// Stub when CUDA feature is not enabled.
 #[cfg(not(feature = "cuda"))]
@@ -57,7 +54,9 @@ pub struct GpuDsp;
 
 #[cfg(not(feature = "cuda"))]
 impl GpuDsp {
-    pub fn new(_config: DspConfig) -> Option<Self> { None }
+    pub fn new(_config: DspConfig) -> Option<Self> {
+        None
+    }
 }
 
 #[cfg(not(feature = "cuda"))]
