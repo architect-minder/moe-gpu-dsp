@@ -1,5 +1,9 @@
 # moe-gpu-dsp
 
+[![crates.io](https://img.shields.io/crates/v/moe-gpu-dsp.svg)](https://crates.io/crates/moe-gpu-dsp)
+[![docs.rs](https://docs.rs/moe-gpu-dsp/badge.svg)](https://docs.rs/moe-gpu-dsp)
+[![CI](https://github.com/architect-minder/moe-gpu-dsp/actions/workflows/ci.yml/badge.svg)](https://github.com/architect-minder/moe-gpu-dsp/actions)
+
 Zero-copy GPU signal processing framework for Rust. Batch cuFFT, CUDA kernel dispatch, and full STFT/IFFT pipelines that stay entirely on GPU memory.
 
 Built on [cudarc](https://docs.rs/cudarc) 0.19.
@@ -30,7 +34,7 @@ All kernels are compiled once at init via NVRTC (typically < 0.1s).
 
 ```toml
 [dependencies]
-moe-gpu-dsp = { git = "https://github.com/architect-minder/moe-gpu-dsp", features = ["cuda"] }
+moe-gpu-dsp = { version = "0.1", features = ["cuda"] }
 ```
 
 ```rust
@@ -95,7 +99,7 @@ export CUDARC_CUDA_VERSION=13010
 
 ```toml
 [dependencies]
-moe-gpu-dsp = { git = "https://github.com/architect-minder/moe-gpu-dsp", features = ["cuda"] }
+moe-gpu-dsp = { version = "0.1", features = ["cuda"] }
 ```
 
 ### 4. Build

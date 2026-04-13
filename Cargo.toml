@@ -6,6 +6,7 @@ authors = ["Sean Morin"]
 description = "MoE-routed GPU signal processing framework — batch cuFFT, kernel dispatch, zero-copy pipelines"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/architect-minder/moe-gpu-dsp"
+documentation = "https://docs.rs/moe-gpu-dsp"
 readme = "README.md"
 keywords = ["cuda", "dsp", "gpu", "fft", "signal-processing"]
 categories = ["science", "multimedia::audio", "hardware-support"]
